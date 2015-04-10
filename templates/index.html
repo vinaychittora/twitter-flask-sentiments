@@ -3,19 +3,29 @@
 {% block body %}
 <div class="row">
 	<div class="col-md-12">
-		<form action="/search">
-			<input type="search" name="q">
-			<input type="submit" value="search twitter">
-		</form>
+           <div id="custom-search-input">
+           	<form id="searchform" method="get" action="/search">
+	            <div class="input-group col-md-12">
+	                <input type="text" class="  search-query form-control" name="q" placeholder="Search" />
+	                <span class="input-group-btn">
+	                    <button class="btn btn-danger" type="button" onclick="javascript:$('#searchform').submit();">
+	                        <span class=" glyphicon glyphicon-search"></span>
+	                    </button>
+	                </span>
+	            </div>
+	            </form>
+	        </div>
+		
 	</div>
+	<hr/>
 </div>
 
 <div class="row">
 
 	<div class="col-md-10">
-		<h3>My Tweets</h3>
+		<h3>My Tweets (Latest 20)</h3>
 		<ol style="list-style:none;">
-			{% for t in itpTweets %}
+			{% for t in MyTweets %}
 
 			<li class="bottom-border">
 				<p>

@@ -5,16 +5,24 @@
 
 
 <div class="row">
-
-	<h2>Searching for {{query}}</h2>
-	</hr>
-	<div class="col-md-12">
-		<form action="/search">
-			<input type="search" name="q" value={{query}}>
-			<input type="submit" value="search twitter">
-		</form>
-	</div>
-
+	
+		<div class="col-md-12">
+				<h3>Searching for "{{query}}"</h3>
+	           <div id="custom-search-input">
+	           	<form id="searchform" method="get" action="/search">
+		            <div class="input-group col-md-12">
+		                <input type="text" class="  search-query form-control" name="q" placeholder="Search" />
+		                <span class="input-group-btn">
+		                    <button class="btn btn-danger" type="button" onclick="javascript:$('#searchform').submit();">
+		                        <span class=" glyphicon glyphicon-search"></span>
+		                    </button>
+		                </span>
+		            </div>
+		            </form>
+		        </div>
+			
+		</div>
+		<hr/>
 </div>
 
 <div class="row">

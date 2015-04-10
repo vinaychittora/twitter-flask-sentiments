@@ -18,14 +18,13 @@ def main():
 	print twitter
 
 	# fetch latest tweets from vinaychittora
-	itpTweets = twitter.statuses.user_timeline(screen_name="vinaychittora", limit=20)
+	MyTweets = twitter.statuses.user_timeline(screen_name="vinaychittora", limit=20)
 	
 	# app.logger.debug(itpTweets)
 
 	templateData = {
 		'title' : 'On my twitter timeline',
-		
-		'itpTweets' : itpTweets
+		'MyTweets' : MyTweets
 	}
 
 	return render_template('index.html', **templateData)
