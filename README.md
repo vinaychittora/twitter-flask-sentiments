@@ -6,6 +6,7 @@
 * PIP
 * Heroku Toolbelt / Foreman
 * Twitter Account
+* textblob (Based on NLTK)
 
 
 ## How to run locally
