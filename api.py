@@ -12,11 +12,6 @@ POST - https://community-sentiment.p.mashape.com/text/
 
 """
 import unirest
-import os
-import threading
-import time
-import csv
-import os
 from textblob import TextBlob
 
 
