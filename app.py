@@ -12,11 +12,11 @@ twitter = Twitter(
                        os.environ.get('CONSUMER_KEY'), os.environ.get('CONSUMER_SECRET'))           
 
            )
-print twitter
+
 
 @app.route('/')
 def main():
-	print twitter
+
 
 	# fetch latest tweets from vinaychittora
 	MyTweets = twitter.statuses.user_timeline(screen_name="vinaychittora", limit=20)
@@ -33,10 +33,10 @@ def main():
 def search():
 	with_sentiments = []
 	THUMB_CONF = {'Positive':"thumbs-o-up", "Negative":"thumbs-o-down", "Neutral":"meh-o"}
-	# get search term from querystring 'q'
-	query = request.args.get('q','#whiplash')
+	# get search term from querystring 'q' or default search for "Whiplash"
+	query = request.args.get('q') or "#whiplash"
 
-	# search with query term and return 10
+	# search with query term and return 50
 	results = twitter.search.tweets(q=query, count=50)
 	tweets_obj = results.get('statuses')
 
@@ -56,6 +56,7 @@ def search():
 		'query' : query,
 		'tweets' : with_sentiments,
 		'THUMB_CONF':THUMB_CONF
+
 	}
 	app.logger.debug(tweets_obj)	
 

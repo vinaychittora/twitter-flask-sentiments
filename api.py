@@ -14,7 +14,7 @@ POST - https://community-sentiment.p.mashape.com/text/
 import unirest
 from textblob import TextBlob
 
-
+# Using external api provided by mashape
 def get_sentiments_by_api(tweet):
 	return unirest.post("https://community-sentiment.p.mashape.com/text/",
 			  headers={
@@ -27,6 +27,7 @@ def get_sentiments_by_api(tweet):
 			  }
 			)
 
+#Using TextBlob sentiment analysis
 def get_sentiments(tweet):
 	result = TextBlob(tweet)
 	return result
