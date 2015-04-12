@@ -1,12 +1,38 @@
 {% extends "layout.html" %}
+{% block css %}
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<style type="text/css">
+		body{
+			background-image: url("/static/404.gif");
+			background-repeat: repeat;
+			background-size: cover;
+		    font-family: "ProximaNova","Gotham","Gotham HTF","Helvetica Neue",Helvetica,Arial,sans-serif;
+		    font-weight: 400;
+		    height: 100%;
+		    margin: 0;
+		    padding: 0;
+		    position: relative;
+		    width: 100%;
+		    color: white;
+		}
+		.row{
+			height: 80% !important;
+		}
+	</style>
+{% endblock css %}
 
 {% block body %}
 
 
 
-<div class="row">
+<div class="row" style="height:80% !important;">
 
-	<h1>404 - uhoh</h1>
+	<h1>404 - uh oh</h1>
+	<p>
+		This is embarrassing. <br/>
+		This page doesn't seems to exist. <a href="/" style="color:orange;">Click here</a> to go back Home.
+	</p>
 
 </div>
 

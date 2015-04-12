@@ -7,7 +7,7 @@
 <div class="row">
 	
 		<div class="col-md-12">
-				<h3>Searching for "{{query}}"</h3>
+				<h3>Searching for "{{query}}" (50 results)</h3> 
 	           <div id="custom-search-input">
 	           	<form id="searchform" method="get" action="/search">
 		            <div class="input-group col-md-12">
@@ -25,36 +25,40 @@
 		<hr/>
 </div>
 
-<div class="row">
-	<div class="col-md-8">
+
 		
 		<ul style="list-style:none;">
 			{% for t in tweets %}
-			<li class="bottom-border">
-				<p>
-					<span class="fa fa-twitter">&nbsp;</span>{{ t.text }}
-					<br>
-					<strong>@{{ t.user.screen_name }}</strong>
-					| <a href="https://www.twitter.com/{{t.user.screen_name}}/status/{{t.id}}">link</a>
-					<br>
-					{{t.created_at|strftime}}
+				<div class="row">
+					<div class="col-md-8">
+						<li class="bottom-border">
+							<p>
+								<span class="fa fa-twitter">&nbsp;</span>{{ t.text }}
+								<br>
+								<strong>@{{ t.user.screen_name }}</strong>
+								| <a href="https://www.twitter.com/{{t.user.screen_name}}/status/{{t.id}}">link</a>
+								<br>
+								{{t.created_at|strftime}}
 
-					{% if t.entities.urls%}
-					<br>
-					<i>tweet links</i>
-					<ol>
-						{% for url in t.entities.urls %}
-						<li><a href="{{url.expanded_url}}">{{url.expanded_url}}</a></li>
-						{% endfor %}
-					</ol>
-					{% endif %}
-				</p>
-			</li>
+								{% if t.entities.urls%}
+								<br>
+								<i>tweet links</i>
+								<ol>
+									{% for url in t.entities.urls %}
+									<li><a href="{{url.expanded_url}}">{{url.expanded_url}}</a></li>
+									{% endfor %}
+								</ol>
+								{% endif %}
+							</p>
+
+						</li>
+					</div>
+					<div class="col-md-4">
+						<h2><i title="" class="fa fa-{{t.icon}}"></i> </h2><h5>&nbspScore (Subjectivity, Sentiment) : {{t.subjectivity|round(3)}} , {{t.sentiment|round(3)}}</h5>
+					</div>
+				</div>
 			{% endfor %}
 		</ul>
-	</div>
-	
 
-</div>
 
 {% endblock %}

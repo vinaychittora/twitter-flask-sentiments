@@ -2,6 +2,7 @@ import os
 import time
 from twitter import *
 from flask import Flask, request, render_template, redirect, abort, flash, jsonify
+from api import *
 
 app = Flask(__name__)   # create our flask app
 
@@ -20,8 +21,6 @@ def main():
 	# fetch latest tweets from vinaychittora
 	MyTweets = twitter.statuses.user_timeline(screen_name="vinaychittora", limit=20)
 	
-	# app.logger.debug(itpTweets)
-
 	templateData = {
 		'title' : 'On my twitter timeline',
 		'MyTweets' : MyTweets
@@ -32,37 +31,37 @@ def main():
 
 @app.route('/search')
 def search():
-
+	with_sentiments = []
+	THUMB_CONF = {'Positive':"thumbs-o-up", "Negative":"thumbs-o-down", "Neutral":"meh-o"}
 	# get search term from querystring 'q'
-	query = request.args.get('q','#redburns')
+	query = request.args.get('q','#whiplash')
 
 	# search with query term and return 10
 	results = twitter.search.tweets(q=query, count=50)
-	
-	# return jsonify(results)
-	# app.logger.debug(results)
+	tweets_obj = results.get('statuses')
+
+	for tweet in tweets_obj:
+		result = get_sentiments(tweet.get("text"))
+		tweet['sentiment'] = float(result.sentiment.polarity)
+		tweet['subjectivity'] = float(result.sentiment.subjectivity)
+		if tweet['sentiment']>0.0:
+			tweet['icon'] = THUMB_CONF['Positive']
+		elif tweet['sentiment']<0.0:
+			tweet['icon'] = THUMB_CONF['Negative']
+		else:
+			tweet['icon'] = THUMB_CONF['Neutral']
+		with_sentiments.append(tweet)
 
 	templateData = {
 		'query' : query,
-		'tweets' : results.get('statuses')
+		'tweets' : with_sentiments,
+		'THUMB_CONF':THUMB_CONF
 	}
+	app.logger.debug(tweets_obj)	
 
 	return render_template('search.html', **templateData)
 
 
-@app.route('/post', methods=['GET','POST'])
-def post_to_twitter():
-
-	if request.method == 'POST':
-		result = twitter.statuses.update(status=request.form.get('status'))
-
-		app.logger.debug(result)
-
-		# redirect to new twitter status post
-		return redirect('http://www.twitter.com/%s/status/%s' % (result['user']['screen_name'], result.get('id')))
-
-	else:
-		return render_template('post_to_twitter.html')
 
 	
 @app.errorhandler(404)
