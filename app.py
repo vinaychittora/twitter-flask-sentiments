@@ -32,18 +32,32 @@ def main():
 @app.route('/search')
 def search():
 	with_sentiments = []
+	overall_polarity = 0.0
+	overall_subjectivity = 0.0
 	THUMB_CONF = {'Positive':"thumbs-o-up", "Negative":"thumbs-o-down", "Neutral":"meh-o"}
 	# get search term from querystring 'q' or default search for "Whiplash"
 	query = request.args.get('q') or "#whiplash"
 
+
 	# search with query term and return 50
-	results = twitter.search.tweets(q=query, count=50)
+	results = twitter.search.tweets(q='"%s"' %(query), lang="en", result_type="mixed", count=100)
 	tweets_obj = results.get('statuses')
 
+	if len(tweets_obj):
+		factor = len(tweets_obj)
+	else:
+	 	factor = 1.0
+
 	for tweet in tweets_obj:
-		result = get_sentiments(tweet.get("text"))
+		#print tweet.get("text").replace(str(request.args.get("q")), " ")
+		result = get_sentiments(tweet.get("text"))#.replace(str(request.args.get("q")), " "))
+		
 		tweet['sentiment'] = float(result.sentiment.polarity)
+		overall_polarity += float(result.sentiment.polarity)
+		
 		tweet['subjectivity'] = float(result.sentiment.subjectivity)
+		overall_subjectivity += float(result.sentiment.subjectivity)
+
 		if tweet['sentiment']>0.0:
 			tweet['icon'] = THUMB_CONF['Positive']
 		elif tweet['sentiment']<0.0:
@@ -55,9 +69,12 @@ def search():
 	templateData = {
 		'query' : query,
 		'tweets' : with_sentiments,
-		'THUMB_CONF':THUMB_CONF
-
+		'THUMB_CONF':THUMB_CONF,
+		'overall_polarity':overall_polarity / factor,
+		'overall_subjectivity':overall_subjectivity / factor,
+		'result_count':factor,
 	}
+
 	app.logger.debug(tweets_obj)	
 
 	return render_template('search.html', **templateData)
@@ -75,6 +92,18 @@ def page_not_found(error):
 def _jinja2_filter_datetime(date, fmt=None):
     pyDate = time.strptime(date,'%a %b %d %H:%M:%S +0000 %Y') # convert twitter date string into python date/time
     return time.strftime('%Y-%m-%d %H:%M:%S', pyDate) # return the formatted date.
+
+@app.template_filter('polarity_icon')
+def _jinja2_filter_datetime(date, polarity):
+	if polarity>0.0:
+		icon = "thumbs-o-up"
+	elif polarity<0.0:
+		icon = "thumbs-o-down"
+	else :
+		icon = "meh-o"
+	return icon
+
+    
     
 # --------- Server On ----------
 # start the webserver

@@ -7,66 +7,87 @@
 <div class="row">
 	
 		<div class="col-md-12">
-				<h3>Searching for "{{query}}" (50 results)</h3> 
-	           <div id="custom-search-input">
-	           	<form id="searchform" method="get" action="/search">
-		            <div class="input-group col-md-12">
-		                <input type="text" class="  search-query form-control" value="{{query}}" name="q" placeholder="Search" />
-		                <span class="input-group-btn">
-		                    <button class="btn btn-danger" type="button" onclick="javascript:$('#searchform').submit();">
-		                        <span class=" glyphicon glyphicon-search"></span>
-		                    </button>
-		                </span>
-		            </div>
-		            </form>
+			<div class="panel panel-default">
+				<div class="panel-heading">Searching for "{{query}}"</div>
+				<div class="panel-body">
+		           <div id="custom-search-input">
+		           	<form id="searchform" method="get" action="/search">
+			            <div class="input-group col-md-12">
+			                <input type="text" class="  search-query form-control" value="{{query}}" name="q" placeholder="Search" />
+			                <span class="input-group-btn">
+			                    <button class="btn btn-danger" type="button" onclick="javascript:$('#searchform').submit();">
+			                        <span class=" glyphicon glyphicon-search"></span>
+			                    </button>
+			                </span>
+			            </div>
+			            </form>
+			        </div>
 		        </div>
-			
+			</div>
 		</div>
-		<hr/>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+		  <div class="panel-heading">Overall Results :</div>
+		  	<div class="panel-body">
+		    		Polarity : {{overall_polarity|round(2)}} <i class="fa fa-{{overall_polarity|polarity_icon(overall_polarity)}}"></i>
+				<br/>
+			 	Subjectivity : {{overall_subjectivity|round(3)}}
+		  </div>
+		</div>
+		
+	</div>
+	
 </div>
 
 
+
+
+
+<ul style="list-style:none;">
+	<h3>{{result_count}} Results Found ...</h3>
+	{% for t in tweets %}
+
+		<div class="row">
+			<div class="col-md-8">
+
+				<li class="bottom-border">
+					<p>
+						<span class="fa fa-twitter">&nbsp;</span>{{ t.text }}
+						<br>
+						<strong>@{{ t.user.screen_name }}</strong>
+						| <a href="https://www.twitter.com/{{t.user.screen_name}}/status/{{t.id}}">link</a>
+						<br>
+						{{t.created_at|strftime}}
+
+						{% if t.entities.urls%}
+						<br>
+						<i>tweet links</i>
+						<ol>
+							{% for url in t.entities.urls %}
+							<li><a href="{{url.expanded_url}}">{{url.expanded_url}}</a></li>
+							{% endfor %}
+						</ol>
+						{% endif %}
+					</p>
+
+				</li>
+			</div>
+			<div class="col-md-4">
+				<h2><i title="" class="fa fa-{{t.icon}}"></i> </h2><h5>&nbspScore (Subjectivity, Sentiment) : {{t.subjectivity|round(3)}} , {{t.sentiment|round(3)}}</h5>
+			</div>
+		</div>
+	{% else %}
+		<div class="row">
+			<div class="col-md-8">
+				<h4 style="color:orange"><i title="" class="fa fa-exclamation-triangle"></i> No tweets found for the keyword "{{query}}".</h4>
+			</div>	
+		</div>
+	{% endfor %}
+</ul>
+
 		
-		<ul style="list-style:none;">
-			{% for t in tweets %}
-				<div class="row">
-					<div class="col-md-8">
-						<li class="bottom-border">
-							<p>
-								<span class="fa fa-twitter">&nbsp;</span>{{ t.text }}
-								<br>
-								<strong>@{{ t.user.screen_name }}</strong>
-								| <a href="https://www.twitter.com/{{t.user.screen_name}}/status/{{t.id}}">link</a>
-								<br>
-								{{t.created_at|strftime}}
-
-								{% if t.entities.urls%}
-								<br>
-								<i>tweet links</i>
-								<ol>
-									{% for url in t.entities.urls %}
-									<li><a href="{{url.expanded_url}}">{{url.expanded_url}}</a></li>
-									{% endfor %}
-								</ol>
-								{% endif %}
-							</p>
-
-						</li>
-					</div>
-					<div class="col-md-4">
-						<h2><i title="" class="fa fa-{{t.icon}}"></i> </h2><h5>&nbspScore (Subjectivity, Sentiment) : {{t.subjectivity|round(3)}} , {{t.sentiment|round(3)}}</h5>
-					</div>
-				</div>
-			{% else %}
-				<div class="row">
-					<div class="col-md-8">
-						<h4 style="color:orange"><i title="" class="fa fa-exclamation-triangle"></i> No tweets found for the keyword "{{query}}".</h4>
-					</div>	
-				</div>
-			{% endfor %}
-		</ul>
-
-
-
 
 {% endblock %}
