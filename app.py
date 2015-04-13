@@ -40,7 +40,7 @@ def search():
 
 
 	# search with query term and return 50
-	results = twitter.search.tweets(q='"%s"' %(query), lang="en", result_type="mixed", count=100)
+	results = twitter.search.tweets(q='"%s" -RT' %(query), lang="en", result_type="mixed", count=100)
 	tweets_obj = results.get('statuses')
 
 	if len(tweets_obj):
