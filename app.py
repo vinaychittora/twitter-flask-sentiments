@@ -50,7 +50,7 @@ def search():
 
 	for tweet in tweets_obj:
 		#print tweet.get("text").replace(str(request.args.get("q")), " ")
-		result = get_sentiments(tweet.get("text"))#.replace(str(request.args.get("q")), " "))
+		result = get_sentiments(tweet.get("text").replace(str(request.args.get("q")), " "))
 		
 		tweet['sentiment'] = float(result.sentiment.polarity)
 		overall_polarity += float(result.sentiment.polarity)
